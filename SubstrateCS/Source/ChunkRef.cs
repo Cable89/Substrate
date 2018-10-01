@@ -168,6 +168,22 @@ namespace Substrate
         }
 
         /// <summary>
+        /// Gets or sets the chunk's status.
+        /// </summary>
+        public String Status
+        {
+            get { return GetChunk().Status; }
+            set
+            {
+                if (GetChunk().Status != value)
+                {
+                    GetChunk().Status = value;
+                    _dirty = true;
+                }
+            }
+        }
+
+        /// <summary>
         /// Saves the underlying physical chunk to the specified output stream.
         /// </summary>
         /// <param name="outStream">An open output stream.</param>
@@ -287,13 +303,13 @@ namespace Substrate
 
                 if (_chunk != null)
                 {
-                    _blocks = _chunk.Blocks;
+                    //_blocks = _chunk.Blocks;
                     _biomes = _chunk.Biomes;
                     _entities = _chunk.Entities;
 
                     // Set callback functions in the underlying block collection
-                    _blocks.ResolveNeighbor += ResolveNeighborHandler;
-                    _blocks.TranslateCoordinates += TranslateCoordinatesHandler;
+                    //_blocks.ResolveNeighbor += ResolveNeighborHandler;
+                    //_blocks.TranslateCoordinates += TranslateCoordinatesHandler;
                 }
             }
             return _chunk;

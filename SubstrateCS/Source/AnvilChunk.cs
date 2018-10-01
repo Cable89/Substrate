@@ -13,23 +13,21 @@ namespace Substrate
         {
             new SchemaNodeCompound("Level")
             {
-                new SchemaNodeList("Sections", TagType.TAG_COMPOUND, new SchemaNodeCompound() {
-                    new SchemaNodeArray("Blocks", 4096),
-                    new SchemaNodeArray("Data", 2048),
-                    new SchemaNodeArray("SkyLight", 2048),
-                    new SchemaNodeArray("BlockLight", 2048),
-                    new SchemaNodeScaler("Y", TagType.TAG_BYTE),
-                    new SchemaNodeArray("Add", 2048, SchemaOptions.OPTIONAL),
-                }),
-                new SchemaNodeArray("Biomes", 256, SchemaOptions.OPTIONAL),
-                new SchemaNodeIntArray("HeightMap", 256),
+                new SchemaNodeIntArray("Biomes", 256, SchemaOptions.OPTIONAL),
                 new SchemaNodeList("Entities", TagType.TAG_COMPOUND, SchemaOptions.CREATE_ON_MISSING),
                 new SchemaNodeList("TileEntities", TagType.TAG_COMPOUND, TileEntity.Schema, SchemaOptions.CREATE_ON_MISSING),
                 new SchemaNodeList("TileTicks", TagType.TAG_COMPOUND, TileTick.Schema, SchemaOptions.OPTIONAL),
                 new SchemaNodeScaler("LastUpdate", TagType.TAG_LONG, SchemaOptions.CREATE_ON_MISSING),
+                new SchemaNodeScaler("InhabitedTime", TagType.TAG_LONG, SchemaOptions.CREATE_ON_MISSING),
                 new SchemaNodeScaler("xPos", TagType.TAG_INT),
                 new SchemaNodeScaler("zPos", TagType.TAG_INT),
-                new SchemaNodeScaler("TerrainPopulated", TagType.TAG_BYTE, SchemaOptions.CREATE_ON_MISSING),
+                new SchemaNodeScaler("Status", TagType.TAG_STRING, SchemaOptions.CREATE_ON_MISSING),
+                new SchemaNodeCompound("Heightmaps", SchemaOptions.OPTIONAL)
+                {
+                },
+                new SchemaNodeCompound("Structures", SchemaOptions.OPTIONAL)
+                {
+                },
             },
         };
 
@@ -50,7 +48,7 @@ namespace Substrate
         private IDataArray3 _skyLight;
 
         private ZXIntArray _heightMap;
-        private ZXByteArray _biomes;
+        private ZXIntArray _biomes;
 
         private TagNodeList _entities;
         private TagNodeList _tileEntities;
@@ -105,6 +103,12 @@ namespace Substrate
         {
             get { return _tree.Root["Level"].ToTagCompound()["TerrainPopulated"].ToTagByte() == 1; }
             set { _tree.Root["Level"].ToTagCompound()["TerrainPopulated"].ToTagByte().Data = (byte)(value ? 1 : 0); }
+        }
+
+        public String Status
+        {
+            get { return _tree.Root["Level"].ToTagCompound()["Status"].ToTagString(); }
+            set { _tree.Root["Level"].ToTagCompound()["Status"].ToTagString().Data = value; }
         }
 
         public static AnvilChunk Create (int x, int z)
@@ -223,7 +227,7 @@ namespace Substrate
 
         public AnvilChunk LoadTree (TagNode tree)
         {
-            TagNodeCompound ctree = tree as TagNodeCompound;
+                        TagNodeCompound ctree = tree as TagNodeCompound;
             if (ctree == null) {
                 return null;
             }
@@ -239,48 +243,48 @@ namespace Substrate
                     continue;
                 _sections[anvilSection.Y] = anvilSection;
             }
-
-            FusedDataArray3[] blocksBA = new FusedDataArray3[_sections.Length];
-            YZXNibbleArray[] dataBA = new YZXNibbleArray[_sections.Length];
-            YZXNibbleArray[] skyLightBA = new YZXNibbleArray[_sections.Length];
-            YZXNibbleArray[] blockLightBA = new YZXNibbleArray[_sections.Length];
+                        //FusedDataArray3[] blocksBA = new FusedDataArray3[_sections.Length];
+            //YZXNibbleArray[] dataBA = new YZXNibbleArray[_sections.Length];
+            //YZXNibbleArray[] skyLightBA = new YZXNibbleArray[_sections.Length];
+            //YZXNibbleArray[] blockLightBA = new YZXNibbleArray[_sections.Length];
 
             for (int i = 0; i < _sections.Length; i++) {
                 if (_sections[i] == null)
                     _sections[i] = new AnvilSection(i);
 
-                blocksBA[i] = new FusedDataArray3(_sections[i].AddBlocks, _sections[i].Blocks);
-                dataBA[i] = _sections[i].Data;
-                skyLightBA[i] = _sections[i].SkyLight;
-                blockLightBA[i] = _sections[i].BlockLight;
+                //blocksBA[i] = new FusedDataArray3(_sections[i].AddBlocks, _sections[i].Blocks);
+                //dataBA[i] = _sections[i].Data;
+                //skyLightBA[i] = _sections[i].SkyLight;
+                //blockLightBA[i] = _sections[i].BlockLight;
             }
 
-            _blocks = new CompositeDataArray3(blocksBA);
-            _data = new CompositeDataArray3(dataBA);
-            _skyLight = new CompositeDataArray3(skyLightBA);
-            _blockLight = new CompositeDataArray3(blockLightBA);
-            
-            _heightMap = new ZXIntArray(XDIM, ZDIM, level["HeightMap"] as TagNodeIntArray);
+            //_blocks = new CompositeDataArray3(blocksBA);
+            //_data = new CompositeDataArray3(dataBA);
+            //_skyLight = new CompositeDataArray3(skyLightBA);
+            //_blockLight = new CompositeDataArray3(blockLightBA);
 
-            if (level.ContainsKey("Biomes"))
-                _biomes = new ZXByteArray(XDIM, ZDIM, level["Biomes"] as TagNodeByteArray);
-            else {
-                level["Biomes"] = new TagNodeByteArray(new byte[256]);
-                _biomes = new ZXByteArray(XDIM, ZDIM, level["Biomes"] as TagNodeByteArray);
+            //_heightMap = new ZXIntArray(XDIM, ZDIM, level["HeightMap"] as TagNodeIntArray);
+                        if (level.ContainsKey("Biomes"))
+            {
+                                _biomes = new ZXIntArray(XDIM, ZDIM, level["Biomes"] as TagNodeIntArray);
+                            }
+            else
+            {
+                
+                level["Biomes"] = new TagNodeIntArray(new int[256]);
+                _biomes = new ZXIntArray(XDIM, ZDIM, level["Biomes"] as TagNodeIntArray);
                 for (int x = 0; x < XDIM; x++)
                     for (int z = 0; z < ZDIM; z++)
                         _biomes[x, z] = BiomeType.Default;
             }
-
-            _entities = level["Entities"] as TagNodeList;
+                        _entities = level["Entities"] as TagNodeList;
             _tileEntities = level["TileEntities"] as TagNodeList;
 
             if (level.ContainsKey("TileTicks"))
                 _tileTicks = level["TileTicks"] as TagNodeList;
             else
                 _tileTicks = new TagNodeList(TagType.TAG_COMPOUND);
-
-            // List-type patch up
+                        // List-type patch up
             if (_entities.Count == 0) {
                 level["Entities"] = new TagNodeList(TagType.TAG_COMPOUND);
                 _entities = level["Entities"] as TagNodeList;
@@ -295,24 +299,20 @@ namespace Substrate
                 level["TileTicks"] = new TagNodeList(TagType.TAG_COMPOUND);
                 _tileTicks = level["TileTicks"] as TagNodeList;
             }
-
-            _cx = level["xPos"].ToTagInt();
+                        _cx = level["xPos"].ToTagInt();
             _cz = level["zPos"].ToTagInt();
-
-            _blockManager = new AlphaBlockCollection(_blocks, _data, _blockLight, _skyLight, _heightMap, _tileEntities, _tileTicks);
+                        //_blockManager = new AlphaBlockCollection(_blocks, _data, _blockLight, _skyLight, _heightMap, _tileEntities, _tileTicks);
             _entityManager = new EntityCollection(_entities);
             _biomeManager = new AnvilBiomeCollection(_biomes);
-
-            return this;
+                        return this;
         }
 
         public AnvilChunk LoadTreeSafe (TagNode tree)
         {
             if (!ValidateTree(tree)) {
-                return null;
+                                return null;
             }
-
-            return LoadTree(tree);
+                        return LoadTree(tree);
         }
 
         private bool ShouldIncludeSection (AnvilSection section)
@@ -365,10 +365,10 @@ namespace Substrate
         private void BuildConditional ()
         {
             TagNodeCompound level = _tree.Root["Level"] as TagNodeCompound;
-            if (_tileTicks != _blockManager.TileTicks && _blockManager.TileTicks.Count > 0) {
-                _tileTicks = _blockManager.TileTicks;
-                level["TileTicks"] = _tileTicks;
-            }
+            //if (_tileTicks != _blockManager.TileTicks && _blockManager.TileTicks.Count > 0) {
+            //    _tileTicks = _blockManager.TileTicks;
+            //    level["TileTicks"] = _tileTicks;
+            //}
         }
 
         private void BuildNBTTree ()
@@ -403,8 +403,8 @@ namespace Substrate
             TagNodeIntArray heightMap = new TagNodeIntArray(new int[elements2]);
             _heightMap = new ZXIntArray(XDIM, ZDIM, heightMap);
 
-            TagNodeByteArray biomes = new TagNodeByteArray(new byte[elements2]);
-            _biomes = new ZXByteArray(XDIM, ZDIM, biomes);
+            TagNodeIntArray biomes = new TagNodeIntArray(new int[elements2]);
+            _biomes = new ZXIntArray(XDIM, ZDIM, biomes);
             for (int x = 0; x < XDIM; x++)
                 for (int z = 0; z < ZDIM; z++)
                     _biomes[x, z] = BiomeType.Default;

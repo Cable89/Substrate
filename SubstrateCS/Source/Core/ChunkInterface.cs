@@ -41,6 +41,12 @@ namespace Substrate.Core
         /// <remarks>Terrain features include ores, water and lava sources, dungeons, trees, flowers, etc.</remarks>
         bool IsTerrainPopulated { get; set; }
 
+        /// <summary>
+        /// Gets or sets the flag indicating that the terrain generator has created terrain features.
+        /// </summary>
+        /// <remarks>Terrain features include ores, water and lava sources, dungeons, trees, flowers, etc.</remarks>
+        String Status { get; set; }
+
         void SetLocation (int x, int z);
 
         /// <summary>

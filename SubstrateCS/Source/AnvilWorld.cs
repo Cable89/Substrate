@@ -344,6 +344,7 @@ namespace Substrate
 
         private AnvilWorld OpenWorld (string path)
         {
+            Console.WriteLine("OpenWorld()");
             if (!Directory.Exists(path)) {
                 if (File.Exists(path)) {
                     _levelFile = IO.Path.GetFileName(path);
@@ -362,7 +363,9 @@ namespace Substrate
             }
 
             if (!LoadLevel()) {
-                throw new Exception("Failed to load '" + _levelFile + "'");
+                Console.WriteLine("Failed to load '" + _levelFile + "'");
+                Console.WriteLine("But that doesent matter");
+                //throw new Exception("Failed to load '" + _levelFile + "'");
             }
 
             return this;
@@ -387,6 +390,7 @@ namespace Substrate
 
         private bool LoadLevel ()
         {
+            Console.WriteLine("LoadLevel()");
             NBTFile nf = new NBTFile(IO.Path.Combine(Path, _levelFile));
             NbtTree tree;
 
@@ -394,6 +398,7 @@ namespace Substrate
             {
                 if (nbtstr == null)
                 {
+                    Console.WriteLine("nbtstr == null");
                     return false;
                 }
 
@@ -402,6 +407,10 @@ namespace Substrate
 
             _level = new Level(this);
             _level = _level.LoadTreeSafe(tree.Root);
+            
+            if(_level == null) {
+                Console.WriteLine("_level == null");
+            }
 
             return _level != null;
         }

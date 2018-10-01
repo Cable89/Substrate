@@ -113,6 +113,15 @@ namespace Substrate
         }
 
 
+        /// <summary>
+        /// Gets or sets the chunk's TerrainPopulated status. Not available in Alpha
+        /// </summary>
+        public String Status
+        {
+            get { return "Foo"; }
+            set {  }
+        }
+
         private AlphaChunk ()
         {
         }

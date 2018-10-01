@@ -172,6 +172,54 @@ namespace Substrate
             },
         };
 
+        private static SchemaNodeCompound _schema113 = new SchemaNodeCompound()
+        {
+            new SchemaNodeCompound("Data")
+            {
+                new SchemaNodeScaler("Time", TagType.TAG_LONG),
+                new SchemaNodeScaler("LastPlayed", TagType.TAG_LONG, SchemaOptions.CREATE_ON_MISSING),
+                new SchemaNodeScaler("SpawnX", TagType.TAG_INT),
+                new SchemaNodeScaler("SpawnY", TagType.TAG_INT),
+                new SchemaNodeScaler("SpawnZ", TagType.TAG_INT),
+                new SchemaNodeScaler("SizeOnDisk", TagType.TAG_LONG, SchemaOptions.CREATE_ON_MISSING),
+                new SchemaNodeScaler("RandomSeed", TagType.TAG_LONG),
+                new SchemaNodeScaler("version", TagType.TAG_INT, SchemaOptions.OPTIONAL),
+                new SchemaNodeScaler("LevelName", TagType.TAG_STRING, SchemaOptions.OPTIONAL),
+                new SchemaNodeScaler("generatorName", TagType.TAG_STRING, SchemaOptions.OPTIONAL),
+                new SchemaNodeScaler("raining", TagType.TAG_BYTE, SchemaOptions.OPTIONAL),
+                new SchemaNodeScaler("thundering", TagType.TAG_BYTE, SchemaOptions.OPTIONAL),
+                new SchemaNodeScaler("rainTime", TagType.TAG_INT, SchemaOptions.OPTIONAL),
+                new SchemaNodeScaler("thunderTime", TagType.TAG_INT, SchemaOptions.OPTIONAL),
+                new SchemaNodeScaler("GameType", TagType.TAG_INT, SchemaOptions.OPTIONAL),
+                new SchemaNodeScaler("MapFeatures", TagType.TAG_BYTE, SchemaOptions.OPTIONAL),
+                new SchemaNodeScaler("hardcore", TagType.TAG_BYTE, SchemaOptions.OPTIONAL),
+                new SchemaNodeScaler("generatorVersion", TagType.TAG_INT, SchemaOptions.OPTIONAL),
+                new SchemaNodeScaler("initialized", TagType.TAG_BYTE, SchemaOptions.OPTIONAL),
+                new SchemaNodeScaler("allowCommands", TagType.TAG_BYTE, SchemaOptions.OPTIONAL),
+                new SchemaNodeScaler("DayTime", TagType.TAG_LONG, SchemaOptions.OPTIONAL),
+
+                new SchemaNodeCompound("CustomBossEvents", SchemaOptions.OPTIONAL),
+                new SchemaNodeCompound("DataPacks", SchemaOptions.OPTIONAL),
+                new SchemaNodeCompound("DimensionData", SchemaOptions.OPTIONAL),
+                new SchemaNodeCompound("GameRules", SchemaOptions.OPTIONAL)
+                {
+                    new SchemaNodeScaler("commandBlockOutput", TagType.TAG_STRING),
+                    new SchemaNodeScaler("doFireTick", TagType.TAG_STRING),
+                    new SchemaNodeScaler("doMobLoot", TagType.TAG_STRING),
+                    new SchemaNodeScaler("doMobSpawning", TagType.TAG_STRING),
+                    new SchemaNodeScaler("doTileDrops", TagType.TAG_STRING),
+                    new SchemaNodeScaler("keepInventory", TagType.TAG_STRING),
+                    new SchemaNodeScaler("mobGriefing", TagType.TAG_STRING),
+                },
+                new SchemaNodeCompound("Player", Player.Schema, SchemaOptions.OPTIONAL),
+                new SchemaNodeCompound("Version", SchemaOptions.OPTIONAL) {
+                    new SchemaNodeScaler("Id", TagType.TAG_INT),
+                    new SchemaNodeScaler("Name", TagType.TAG_STRING),
+                    new SchemaNodeScaler("Snapshot", TagType.TAG_BYTE),
+                },
+            },
+        };
+
         private TagNodeCompound _source;
 
         private NbtWorld _world;
@@ -692,10 +740,12 @@ namespace Substrate
         /// <returns>The <see cref="Level"/> returns itself on success, or null if the tree failed validation.</returns>
         public virtual Level LoadTreeSafe (TagNode tree)
         {
+            Console.WriteLine("LoadTreeSafe()");
             if (!ValidateTree(tree)) {
+                Console.WriteLine("Validation FAILED!");
                 return null;
             }
-
+            Console.WriteLine("Validation PASSED!");
             return LoadTree(tree);
         }
 
@@ -796,7 +846,8 @@ namespace Substrate
         /// <returns>Status indicating whether the tree was valid against the internal schema.</returns>
         public virtual bool ValidateTree (TagNode tree)
         {
-            return new NbtVerifier(tree, _schema).Verify();
+            Console.WriteLine("ValidateTree()");
+            return new NbtVerifier(tree, _schema113).Verify();
         }
 
         #endregion

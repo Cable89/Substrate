@@ -16,6 +16,14 @@ namespace Substrate
             new SchemaNodeArray("BlockLight", 2048),
             new SchemaNodeScaler("Y", TagType.TAG_BYTE),
             new SchemaNodeArray("Add", 2048, SchemaOptions.OPTIONAL),
+            /*
+            new SchemaNodeArray("Blocks", 4096),
+            new SchemaNodeArray("Data", 2048),
+            new SchemaNodeArray("SkyLight", 2048),
+            new SchemaNodeArray("BlockLight", 2048),
+            new SchemaNodeScaler("Y", TagType.TAG_BYTE),
+            new SchemaNodeArray("Add", 2048, SchemaOptions.OPTIONAL),
+            */
         };
 
         private const int XDIM = 16;
@@ -123,10 +131,10 @@ namespace Substrate
 
             _y = ctree["Y"] as TagNodeByte;
 
-            _blocks = new YZXByteArray(XDIM, YDIM, ZDIM, ctree["Blocks"] as TagNodeByteArray);
-            _data = new YZXNibbleArray(XDIM, YDIM, ZDIM, ctree["Data"] as TagNodeByteArray);
-            _skyLight = new YZXNibbleArray(XDIM, YDIM, ZDIM, ctree["SkyLight"] as TagNodeByteArray);
-            _blockLight = new YZXNibbleArray(XDIM, YDIM, ZDIM, ctree["BlockLight"] as TagNodeByteArray);
+            //_blocks = new YZXByteArray(XDIM, YDIM, ZDIM, ctree["Blocks"] as TagNodeByteArray);
+            //_data = new YZXNibbleArray(XDIM, YDIM, ZDIM, ctree["Data"] as TagNodeByteArray);
+            //_skyLight = new YZXNibbleArray(XDIM, YDIM, ZDIM, ctree["SkyLight"] as TagNodeByteArray);
+            //_blockLight = new YZXNibbleArray(XDIM, YDIM, ZDIM, ctree["BlockLight"] as TagNodeByteArray);
 
             if (!ctree.ContainsKey("Add"))
                 ctree["Add"] = new TagNodeByteArray(new byte[2048]);

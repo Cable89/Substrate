@@ -1,6 +1,7 @@
 **/Debug/*
 **/bin/*
 **/obj/*
+**/.vs/*
 *.suo
 SubstrateCS/Release/
 *.sdf
