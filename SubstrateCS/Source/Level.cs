@@ -132,7 +132,7 @@ namespace Substrate
     /// </summary>
     public class Level : INbtObject<Level>, ICopyable<Level>
     {
-        private static SchemaNodeCompound _schema = new SchemaNodeCompound()
+        private static SchemaNodeCompound _schema_19132 = new SchemaNodeCompound()
         {
             new SchemaNodeCompound("Data")
             {
@@ -171,6 +171,121 @@ namespace Substrate
 			    },
             },
         };
+
+        private static SchemaNodeCompound _schema_19133 = new SchemaNodeCompound()
+        {
+            new SchemaNodeCompound("Data")
+            {
+                new SchemaNodeCompound("CustomBossEvents", SchemaOptions.OPTIONAL)
+                {
+                    new SchemaNodeCompound("ID", SchemaOptions.OPTIONAL)
+                    {
+                        new SchemaNodeScaler("Players", TagType.TAG_LIST),
+                        new SchemaNodeScaler("Color", TagType.TAG_STRING),
+                        new SchemaNodeScaler("CreateWorldFog", TagType.TAG_BYTE),
+                        new SchemaNodeScaler("DarkenScreen", TagType.TAG_BYTE),
+                        new SchemaNodeScaler("Max", TagType.TAG_INT),
+                        new SchemaNodeScaler("Value", TagType.TAG_INT),
+                        new SchemaNodeScaler("Name", TagType.TAG_STRING),
+                        new SchemaNodeScaler("Overlay", TagType.TAG_STRING),
+                        new SchemaNodeScaler("PlayBossMusic", TagType.TAG_BYTE),
+                        new SchemaNodeScaler("Visible", TagType.TAG_BYTE),
+                    },
+                },
+                new SchemaNodeCompound("DataPacks", SchemaOptions.OPTIONAL)
+                {
+                    new SchemaNodeScaler("Disabled", TagType.TAG_LIST),
+                    new SchemaNodeScaler("Enabled", TagType.TAG_LIST),
+                },
+                new SchemaNodeCompound("DimensionData", SchemaOptions.OPTIONAL)
+                {
+                    new SchemaNodeCompound("1", SchemaOptions.OPTIONAL)
+                    {
+                        new SchemaNodeCompound("DragonFight", SchemaOptions.OPTIONAL)
+                        {
+                            new SchemaNodeCompound("ExitPortalLocation", SchemaOptions.OPTIONAL)
+                            {
+                                new SchemaNodeScaler("X", TagType.TAG_BYTE),
+                                new SchemaNodeScaler("Y", TagType.TAG_BYTE),
+                                new SchemaNodeScaler("Z", TagType.TAG_BYTE),
+                            },
+                            new SchemaNodeScaler("Gateways", TagType.TAG_LIST),
+                            new SchemaNodeScaler("DragonKilled", TagType.TAG_BYTE),
+                            new SchemaNodeScaler("DragonUUIDLeast", TagType.TAG_INT),
+                            new SchemaNodeScaler("DragonUUIDMost", TagType.TAG_INT),
+                            new SchemaNodeScaler("PreviouslyKilled", TagType.TAG_BYTE),
+                        },
+                    },
+                },
+                new SchemaNodeScaler("version", TagType.TAG_INT),
+                new SchemaNodeScaler("initialized", TagType.TAG_BYTE),
+                new SchemaNodeScaler("LevelName", TagType.TAG_STRING),
+                new SchemaNodeScaler("generatorName", TagType.TAG_STRING),
+                new SchemaNodeScaler("generatorVersion", TagType.TAG_INT),
+                new SchemaNodeCompound("generatorOptions", SchemaOptions.OPTIONAL)
+                {
+                    // TODO several possible schemas
+                    new SchemaNodeCompound("biome_source", SchemaOptions.OPTIONAL)
+                    {
+                        new SchemaNodeCompound("options", SchemaOptions.OPTIONAL)
+                        {
+                            new SchemaNodeScaler("biomes", TagType.TAG_LIST),
+                        },
+                        new SchemaNodeScaler("type", TagType.TAG_STRING),
+                    },
+                    new SchemaNodeCompound("chunk_generator", SchemaOptions.OPTIONAL)
+                    {
+                        new SchemaNodeCompound("options", SchemaOptions.OPTIONAL)
+                        {
+                            new SchemaNodeScaler("default_block", TagType.TAG_STRING),
+                            new SchemaNodeScaler("default_fluid", TagType.TAG_STRING),
+                        },
+                        new SchemaNodeScaler("type", TagType.TAG_STRING),
+                    },
+                },
+                new SchemaNodeScaler("RandomSeed", TagType.TAG_LONG),
+                new SchemaNodeScaler("MapFeatures", TagType.TAG_BYTE),
+                new SchemaNodeScaler("LastPlayed", TagType.TAG_LONG),
+                new SchemaNodeScaler("SizeOnDisk", TagType.TAG_LONG),
+                new SchemaNodeScaler("allowCommands", TagType.TAG_BYTE),
+                new SchemaNodeScaler("hardcore", TagType.TAG_BYTE),
+                new SchemaNodeScaler("GameType", TagType.TAG_INT),
+                new SchemaNodeScaler("Difficulty", TagType.TAG_BYTE),
+                new SchemaNodeScaler("DifficultyLocked", TagType.TAG_BYTE),
+                new SchemaNodeScaler("Time", TagType.TAG_LONG),
+                new SchemaNodeScaler("DayTime", TagType.TAG_LONG),
+                new SchemaNodeScaler("SpawnX", TagType.TAG_INT),
+                new SchemaNodeScaler("SpawnY", TagType.TAG_INT),
+                new SchemaNodeScaler("SpawnZ", TagType.TAG_INT),
+                new SchemaNodeScaler("BorderCenterX", TagType.TAG_DOUBLE),
+                new SchemaNodeScaler("BorderCenterZ", TagType.TAG_DOUBLE),
+                new SchemaNodeScaler("BorderSize", TagType.TAG_DOUBLE),
+                new SchemaNodeScaler("BorderSafeZone", TagType.TAG_DOUBLE),
+                new SchemaNodeScaler("BorderWarningBlocks", TagType.TAG_DOUBLE),
+                new SchemaNodeScaler("BorderWarningTime", TagType.TAG_DOUBLE),
+                new SchemaNodeScaler("BorderSizeLerpTarget", TagType.TAG_DOUBLE),
+                new SchemaNodeScaler("BorderSizeLerpTime", TagType.TAG_LONG),
+                new SchemaNodeScaler("BorderDamagePerBlock", TagType.TAG_DOUBLE),
+                new SchemaNodeScaler("raining", TagType.TAG_BYTE),
+                new SchemaNodeScaler("rainTime", TagType.TAG_INT),
+                new SchemaNodeScaler("thundering", TagType.TAG_BYTE),
+                new SchemaNodeScaler("thunderTime", TagType.TAG_INT),
+                new SchemaNodeScaler("clearWeatherTime", TagType.TAG_INT),
+                new SchemaNodeCompound("Player", Player.Schema, SchemaOptions.OPTIONAL),
+                new SchemaNodeCompound("GameRules", SchemaOptions.OPTIONAL)
+                {
+                    
+                },
+                new SchemaNodeCompound("Version", SchemaOptions.OPTIONAL)
+                {
+                    new SchemaNodeScaler("Id", TagType.TAG_INT),
+                    new SchemaNodeScaler("Name", TagType.TAG_STRING),
+                    new SchemaNodeScaler("Snapshot", TagType.TAG_BYTE),
+                },
+            },
+        };
+
+        private static SchemaNodeCompound _schema = _schema_19133;
 
         private TagNodeCompound _source;
 
