@@ -205,14 +205,14 @@ namespace Substrate
                         {
                             new SchemaNodeCompound("ExitPortalLocation", SchemaOptions.OPTIONAL)
                             {
-                                new SchemaNodeScaler("X", TagType.TAG_BYTE),
-                                new SchemaNodeScaler("Y", TagType.TAG_BYTE),
-                                new SchemaNodeScaler("Z", TagType.TAG_BYTE),
+                                new SchemaNodeScaler("X", TagType.TAG_INT),
+                                new SchemaNodeScaler("Y", TagType.TAG_INT),
+                                new SchemaNodeScaler("Z", TagType.TAG_INT),
                             },
                             new SchemaNodeScaler("Gateways", TagType.TAG_LIST),
                             new SchemaNodeScaler("DragonKilled", TagType.TAG_BYTE),
-                            new SchemaNodeScaler("DragonUUIDLeast", TagType.TAG_INT),
-                            new SchemaNodeScaler("DragonUUIDMost", TagType.TAG_INT),
+                            new SchemaNodeScaler("DragonUUIDLeast", TagType.TAG_LONG),
+                            new SchemaNodeScaler("DragonUUIDMost", TagType.TAG_LONG),
                             new SchemaNodeScaler("PreviouslyKilled", TagType.TAG_BYTE),
                         },
                     },
@@ -291,35 +291,46 @@ namespace Substrate
 
         private NbtWorld _world;
 
-        private long _time;
-        private long _lastPlayed;
+        private int? _version;
+        private byte? _initialized;
+        private string _levelName;
+        private string _generatorName;
+        private int? _generatorVersion;
+        private bool? _generatorOptions; // TODO: Make a class or other container
 
-        private Player _player;
+        private long _randomSeed;
+        private byte? _mapFeatures;
+        private long _lastPlayed;
+        private long _sizeOnDisk;
+        private byte? _allowCommands;
+        private byte? _hardcore;
+        private int? _gameType;
+        private byte? _difficulty;
+        private byte? _difficultyLocked;
+        private long _time;
+        private long? _DayTime;
 
         private int _spawnX;
         private int _spawnY;
         private int _spawnZ;
 
-        private long _sizeOnDisk;
-        private long _randomSeed;
-        private int? _version;
-        private string _name;
-        private string _generator;
+        private double _BorderCenterX;
+        private double _BorderCenterZ;
+        private double _BorderSize;
+        private double _BorderSafeZone;
+        private double _BorderWarningBlocks;
+        private double _BorderWarningTime;
+        private double _BorderSizeLerpTarget;
+        private long _BorderSizeLerpTime;
+        private double _BorderDamagePerBlock;
 
         private byte? _raining;
-        private byte? _thundering;
         private int? _rainTime;
+        private byte? _thundering;
         private int? _thunderTime;
+        private int? _clearWeatherTime;
 
-        private int? _gameType;
-        private byte? _mapFeatures;
-        private byte? _hardcore;
-
-        private int? _generatorVersion;
-        private string _generatorOptions;
-        private byte? _initialized;
-        private byte? _allowCommands;
-        private long? _DayTime;
+        private Player _player;
 
         private GameRules _gameRules;
 
@@ -350,7 +361,7 @@ namespace Substrate
             set
             {
                 _player = value;
-                _player.World = _name;
+                _player.World = _levelName;
             }
         }
 
@@ -371,9 +382,9 @@ namespace Substrate
         /// <summary>
         /// Gets the estimated size of the world in bytes.
         /// </summary>
-        public long SizeOnDisk
-        {
-            get { return _sizeOnDisk; }
+        public long SizeOnDisk {
+            get{ return _sizeOnDisk; }
+            private set { _sizeOnDisk = value; }
         }
 
         /// <summary>
@@ -386,7 +397,7 @@ namespace Substrate
         }
 
         /// <summary>
-        /// Gets or sets the world's version number.
+        /// Gets or sets the world's NBT version number.
         /// </summary>
         public int Version
         {
@@ -401,10 +412,10 @@ namespace Substrate
         /// will also be updated.</remarks>
         public string LevelName
         {
-            get { return _name; }
+            get { return _levelName; }
             set
             {
-                _name = value;
+                _levelName = value;
                 if (_player != null) {
                     _player.World = value;
                 }
@@ -417,8 +428,8 @@ namespace Substrate
         /// <remarks>This should be 'default', 'flat', or 'largeBiomes'.</remarks>
         public string GeneratorName
         {
-            get { return _generator; }
-            set { _generator = value; }
+            get { return _generatorName; }
+            set { _generatorName = value; }
         }
 
         /// <summary>
@@ -502,8 +513,9 @@ namespace Substrate
         /// </summary>
         public string GeneratorOptions
         {
-            get { return _generatorOptions ?? ""; }
-            set { _generatorOptions = value; }
+            // Is now a composite, probably needs a class
+            get;
+            set;
         }
 
         /// <summary>
@@ -568,6 +580,7 @@ namespace Substrate
         /// <param name="world">The world that the <see cref="Level"/> should be tied to.</param>
         public Level (NbtWorld world)
         {
+            // TODO: fix this
             _world = world;
 
             // Sane defaults
@@ -576,15 +589,15 @@ namespace Substrate
             _spawnX = 0;
             _spawnY = 64;
             _spawnZ = 0;
-            _sizeOnDisk = 0;
+            SizeOnDisk = 0;
             _randomSeed = new Random().Next();
             //_version = 19132;
             _version = 19133;
-            _name = "Untitled";
-            _generator = "default";
+            _levelName = "Untitled";
+            _generatorName = "default";
             _hardcore = 0;
 
-            _generatorOptions = "";
+            _generatorOptions = null;
             _generatorVersion = 1;
             _initialized = 0;
             _allowCommands = 0;
@@ -603,6 +616,7 @@ namespace Substrate
         /// <param name="p">The <see cref="Level"/> object to copy.</param>
         protected Level (Level p)
         {
+            // TODO: Fix this
             _world = p._world;
 
             _time = p._time;
@@ -610,11 +624,11 @@ namespace Substrate
             _spawnX = p._spawnX;
             _spawnY = p._spawnY;
             _spawnZ = p._spawnZ;
-            _sizeOnDisk = p._sizeOnDisk;
+            SizeOnDisk = p.SizeOnDisk;
             _randomSeed = p._randomSeed;
             _version = p._version;
-            _name = p._name;
-            _generator = p._generator;
+            _levelName = p._levelName;
+            _generatorName = p._generatorName;
 
             _raining = p._raining;
             _thundering = p._thundering;
@@ -647,7 +661,7 @@ namespace Substrate
         public void SetDefaultPlayer ()
         {
             _player = new Player();
-            _player.World = _name;
+            _player.World = _levelName;
 
             _player.Position.X = _spawnX;
             _player.Position.Y = _spawnY + 1.7;
@@ -729,18 +743,18 @@ namespace Substrate
             _spawnY = ctree["SpawnY"].ToTagInt();
             _spawnZ = ctree["SpawnZ"].ToTagInt();
 
-            _sizeOnDisk = ctree["SizeOnDisk"].ToTagLong();
+            SizeOnDisk = ctree["SizeOnDisk"].ToTagLong();
             _randomSeed = ctree["RandomSeed"].ToTagLong();
 
             if (ctree.ContainsKey("version")) {
                 _version = ctree["version"].ToTagInt();
             }
             if (ctree.ContainsKey("LevelName")) {
-                _name = ctree["LevelName"].ToTagString();
+                _levelName = ctree["LevelName"].ToTagString();
             }
 
             if (ctree.ContainsKey("generatorName")) {
-                _generator = ctree["generatorName"].ToTagString();
+                _generatorName = ctree["generatorName"].ToTagString();
             }
 
             if (ctree.ContainsKey("raining")) {
@@ -770,7 +784,7 @@ namespace Substrate
                 _generatorVersion = ctree["generatorVersion"].ToTagInt();
             }
             if (ctree.ContainsKey("generatorOptions")) {
-                _generatorOptions = ctree["generatorOptions"].ToTagString();
+                //_generatorOptions = ctree["generatorOptions"].ToTagString();
             }
             if (ctree.ContainsKey("allowCommands")) {
                 _allowCommands = ctree["allowCommands"].ToTagByte();
@@ -831,19 +845,19 @@ namespace Substrate
             data["SpawnX"] = new TagNodeInt(_spawnX);
             data["SpawnY"] = new TagNodeInt(_spawnY);
             data["SpawnZ"] = new TagNodeInt(_spawnZ);
-            data["SizeOnDisk"] = new TagNodeLong(_sizeOnDisk);
+            data["SizeOnDisk"] = new TagNodeLong(SizeOnDisk);
             data["RandomSeed"] = new TagNodeLong(_randomSeed);
 
             if (_version != null && _version != 0) {
                 data["version"] = new TagNodeInt(_version ?? 0);
             }
 
-            if (_name != null) {
-                data["LevelName"] = new TagNodeString(_name);
+            if (_levelName != null) {
+                data["LevelName"] = new TagNodeString(_levelName);
             }
 
-            if (_generator != null) {
-                data["generatorName"] = new TagNodeString(_generator);
+            if (_generatorName != null) {
+                data["generatorName"] = new TagNodeString(_generatorName);
             }
 
             if (_raining != null) {

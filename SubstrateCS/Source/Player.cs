@@ -118,7 +118,7 @@ namespace Substrate
     /// are stored individually or within level data.</remarks>
     public class Player : Entity, INbtObject<Player>, ICopyable<Player>, IItemContainer
     {
-        private static readonly SchemaNodeCompound _schema = Entity.Schema.MergeInto(new SchemaNodeCompound("")
+        private static readonly SchemaNodeCompound _schema_19132 = Entity.Schema.MergeInto(new SchemaNodeCompound("")
         {
             new SchemaNodeScaler("AttackTime", TagType.TAG_SHORT, SchemaOptions.CREATE_ON_MISSING),
             new SchemaNodeScaler("DeathTime", TagType.TAG_SHORT),
@@ -152,6 +152,43 @@ namespace Substrate
                 new SchemaNodeScaler("flySpeed", TagType.TAG_FLOAT, SchemaOptions.OPTIONAL),
             }, SchemaOptions.OPTIONAL),
         });
+
+        private static readonly SchemaNodeCompound _schema_19133 = Entity.Schema.MergeInto(new SchemaNodeCompound("")
+        {
+            new SchemaNodeCompound("abilities", new SchemaNodeCompound("") {
+                new SchemaNodeScaler("walkSpeed", TagType.TAG_FLOAT, SchemaOptions.OPTIONAL),
+                new SchemaNodeScaler("flySpeed", TagType.TAG_FLOAT, SchemaOptions.OPTIONAL),
+                new SchemaNodeScaler("mayfly", TagType.TAG_BYTE),
+                new SchemaNodeScaler("flying", TagType.TAG_BYTE),
+                new SchemaNodeScaler("invulnerable", TagType.TAG_BYTE),
+                new SchemaNodeScaler("mayBuild", TagType.TAG_BYTE, SchemaOptions.OPTIONAL),
+                new SchemaNodeScaler("instabuild", TagType.TAG_BYTE),
+            }, SchemaOptions.OPTIONAL),
+            //new SchemaNodeScaler("AttackTime", TagType.TAG_SHORT, SchemaOptions.CREATE_ON_MISSING),
+            //new SchemaNodeScaler("DeathTime", TagType.TAG_SHORT),
+            //new SchemaNodeScaler("Health", TagType.TAG_FLOAT),
+            //new SchemaNodeScaler("HurtTime", TagType.TAG_SHORT),
+            //new SchemaNodeScaler("Dimension", TagType.TAG_INT),
+            //new SchemaNodeList("Inventory", TagType.TAG_COMPOUND, ItemCollection.Schema),
+            //new SchemaNodeList("EnderItems", TagType.TAG_COMPOUND, ItemCollection.Schema, SchemaOptions.OPTIONAL),
+            //new SchemaNodeScaler("World", TagType.TAG_STRING, SchemaOptions.OPTIONAL),
+            //new SchemaNodeScaler("Sleeping", TagType.TAG_BYTE, SchemaOptions.CREATE_ON_MISSING),
+            //new SchemaNodeScaler("SleepTimer", TagType.TAG_SHORT, SchemaOptions.CREATE_ON_MISSING),
+            //new SchemaNodeScaler("SpawnX", TagType.TAG_INT, SchemaOptions.OPTIONAL),
+            //new SchemaNodeScaler("SpawnY", TagType.TAG_INT, SchemaOptions.OPTIONAL),
+            //new SchemaNodeScaler("SpawnZ", TagType.TAG_INT, SchemaOptions.OPTIONAL),
+            //new SchemaNodeScaler("foodLevel", TagType.TAG_INT, SchemaOptions.OPTIONAL),
+            //new SchemaNodeScaler("foodTickTimer", TagType.TAG_INT, SchemaOptions.OPTIONAL),
+            //new SchemaNodeScaler("foodExhaustionLevel", TagType.TAG_FLOAT, SchemaOptions.OPTIONAL),
+            //new SchemaNodeScaler("foodSaturationLevel", TagType.TAG_FLOAT, SchemaOptions.OPTIONAL),
+            //new SchemaNodeScaler("XpP", TagType.TAG_FLOAT, SchemaOptions.OPTIONAL),
+            //new SchemaNodeScaler("XpLevel", TagType.TAG_INT, SchemaOptions.OPTIONAL),
+            //new SchemaNodeScaler("XpTotal", TagType.TAG_INT, SchemaOptions.OPTIONAL),
+            //new SchemaNodeScaler("Score", TagType.TAG_INT, SchemaOptions.OPTIONAL),
+            //new SchemaNodeScaler("playerGameType", TagType.TAG_INT, SchemaOptions.OPTIONAL),
+        });
+
+        private static readonly SchemaNodeCompound _schema = _schema_19133;
 
         private const int _CAPACITY = 105;
         private const int _ENDER_CAPACITY = 27;
